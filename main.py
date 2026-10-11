@@ -20,8 +20,11 @@ async def main(request: Request):
             "messages": [{"role": "user", "content": user_text}],
         }
     )
+try:
     answer = response.json()["choices"][0]["message"]["content"]
-
+except KeyError:
+    print("DEEPSEEK ERROR RESPONSE:", response.text)
+    answer = "Извините, не удалось получить ответ от нейросети."
     return {
         "version": body["version"],
         "session": body["session"],
