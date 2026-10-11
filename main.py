@@ -7,6 +7,7 @@ app = FastAPI()
 DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
+
 @app.post("/")
 async def main(request: Request):
     body = await request.json()
@@ -20,11 +21,13 @@ async def main(request: Request):
             "messages": [{"role": "user", "content": user_text}],
         }
     )
-try:
-    answer = response.json()["choices"][0]["message"]["content"]
-except KeyError:
-    print("DEEPSEEK ERROR RESPONSE:", response.text)
-    answer = "Извините, не удалось получить ответ от нейросети."
+
+    try:
+        answer = response.json()["choices"][0]["message"]["content"]
+    except KeyError:
+        print("DEEPSEEK ERROR RESPONSE:", response.text)
+        answer = "Извините, не удалось получить ответ от нейросети."
+
     return {
         "version": body["version"],
         "session": body["session"],
